@@ -38,7 +38,7 @@ const rightInnerSelected = ref('')
 
 <template>
   <div id="container">
-    <ContextMenu :menu="leftMenu" @select="leftSelected = $event.label" style="flex: 1;">
+    <ContextMenu :menu="leftMenu" @select="leftSelected = $event.label" style="flex: 1; margin-right: 30px;">
       <div id="left" style="overflow: hidden;">
         <h1>{{ leftSelected }}</h1>
       </div>
@@ -64,7 +64,6 @@ const rightInnerSelected = ref('')
 
 #left {
   height: 50vh;
-  margin-right: 30px;
   background-color: skyblue;
 }
 

@@ -1,4 +1,4 @@
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted, nextTick } from "vue";
 
 export function useContextmenu(container) {
   const visible = ref(false);
@@ -19,13 +19,32 @@ export function useContextmenu(container) {
   function showMenu(e) {
     e.preventDefault();
     e.stopPropagation();
-
     visible.value = true;
-    x.value = e.clientX;
-    y.value = e.clientY;
+
+    nextTick(() => {
+      const { clientX, clientY } = e;
+      const menuContainer = document.querySelector(".context-menu");
+      const { clientWidth: menuWidth, clientHeight: menuHeight } =
+        menuContainer;
+      const isOverPortWidth = clientX + menuWidth > window.innerWidth;
+      const isOverPortHeight = clientY + menuHeight > window.innerHeight;
+
+      if (isOverPortWidth) {
+        x.value = clientX - menuWidth;
+        y.value = clientY;
+      }
+      if (isOverPortHeight) {
+        x.value = clientX;
+        y.value = clientY - menuHeight;
+      }
+      if (!isOverPortHeight && !isOverPortWidth) {
+        x.value = clientX;
+        y.value = clientY;
+      }
+    });
   }
 
-  function hideMenu(e) {
+  function hideMenu() {
     visible.value = false;
   }
   return { visible, x, y };
