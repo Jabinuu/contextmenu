@@ -1,30 +1,86 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
+import ContextMenu from './components/ContextMenu.vue';
+import { ref } from 'vue';
+const leftMenu = [
+  { label: '部门' },
+  { label: '员工' },
+  { label: '角色' },
+  { label: '权限' },
+  { label: '领导' }
+]
+const leftSelected = ref('')
+
+const rightMenu = [
+  { label: '添加' },
+  { label: '删除' },
+  { label: '修改' },
+  { label: '查看' },
+  { label: '删除' }
+]
+const rightSelected = ref('')
+
+const rightInnerMenu = [
+  {
+    label: '菜单1',
+    subMenu: [
+      { label: '子菜单1' },
+      { label: '子菜单2' },
+      { label: '子菜单3' }
+    ]
+  },
+  { label: '菜单2' },
+  { label: '菜单3' },
+  { label: '菜单4' },
+  { label: '菜单5' }
+]
+const rightInnerSelected = ref('')
 </script>
 
 <template>
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
+  <div id="container">
+    <ContextMenu :menu="leftMenu" @select="leftSelected = $event.label" style="flex: 1;">
+      <div id="left" style="overflow: hidden;">
+        <h1>{{ leftSelected }}</h1>
+      </div>
+    </ContextMenu>
+
+    <ContextMenu :menu="rightMenu" @select="rightSelected = $event.label" style="flex:1;">
+      <div id="right" style="overflow: hidden;">
+        <h1>{{ rightSelected }}</h1>
+        <ContextMenu :menu="rightInnerMenu" @select="rightInnerSelected = $event.label">
+          <div id="right-inner" style="overflow: hidden;">
+            <h1>{{ rightInnerSelected }}</h1>
+          </div>
+        </ContextMenu>
+      </div>
+    </ContextMenu>
   </div>
-  <HelloWorld msg="Vite + Vue" />
 </template>
 
 <style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+#container {
+  display: flex;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+
+#left {
+  height: 50vh;
+  margin-right: 30px;
+  background-color: skyblue;
 }
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+
+#right {
+  position: relative;
+  box-sizing: border-box;
+  height: 50vh;
+  padding: 20px;
+  background-color: greenyellow;
+}
+
+#right-inner {
+  position: absolute;
+  bottom: 20px;
+  width: calc(100% - 40px);
+  height: 100px;
+  background-color: green;
 }
 </style>
